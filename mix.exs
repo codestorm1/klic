@@ -27,5 +27,6 @@ defmodule Chat.Mixfile do
      {:phoenix_ecto, "~> 0.1"},
      {:postgrex, ">= 0.0.0"},
      {:cowboy, "~> 1.0"}]
+		 #{:elixir_ale, "~> 0.3"}]
   end
 end

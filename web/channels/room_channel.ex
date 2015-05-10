@@ -12,11 +12,11 @@ defmodule Chat.RoomChannel do
   `:ignore` to deny subscription/broadcast on this channel
   for the requested topic
   """
+
   def join("rooms:lobby", message, socket) do
     Process.flag(:trap_exit, true)
     :timer.send_interval(5000, :ping)
     send(self, {:after_join, message})
-
     {:ok, socket}
   end
 
@@ -30,17 +30,21 @@ defmodule Chat.RoomChannel do
     push socket, "join", %{status: "connected"}
     {:noreply, socket}
   end
+	
   def handle_info(:ping, socket) do
+		Logger.debug "ping!"
     push socket, "new:msg", %{user: "SYSTEM", body: "ping"}
     {:noreply, socket}
   end
 
   def terminate(reason, socket) do
-    Logger.debug"> leave #{inspect reason}"
+    Logger.debug "> leave #{inspect reason}"
     :ok
   end
 
   def handle_in("new:msg", msg, socket) do
+		body = msg["body"]
+		Logger.debug "new message #{body}"
     broadcast! socket, "new:msg", %{user: msg["user"], body: msg["body"]}
     {:reply, {:ok, msg["body"]}, assign(socket, :user, msg["user"])}
   end
