@@ -17,6 +17,10 @@ defmodule Chat.RoomChannel do
     Process.flag(:trap_exit, true)
     :timer.send_interval(5000, :ping)
     send(self, {:after_join, message})
+    assert {:ok, state} = GpioModule.start_gpio("channel blue", 17, 5, state)
+    assert {:ok, state} = GpioModule.start_gpio("channel red", 18, 6, state)
+    assert {:ok, state} = GpioModule.start_gpio("channel green", 22, 13, state)
+		GpioModule.listen_for_change(state)
     {:ok, socket}
   end
 
